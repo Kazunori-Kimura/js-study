@@ -103,6 +103,8 @@ npm run xxx
 
 ```
 # アンケート
+enquete {list}
+
 enquete:<id> {hash}
   title {string}
   description {string}
@@ -128,25 +130,132 @@ enquete:<id>/question:<id>/choice:<id> {string} 選択肢の文字列
 enquete:<id>/question:<id>/user:<userid> {set} choiceのidをsetに格納
 ```
 
-Redisのデータ設計はRDBと違ってちょっと発想の転換が必要です。
+ここまで書いて思ったけど、Redisに向いていない題材だな...
+
+~~Redisのデータ設計はRDBと違ってちょっと発想の転換が必要です。~~
 
 #### URI設計
 
 - GET: /enquete
+
+[
+  {
+    id,
+    title,
+    description,
+    order,
+    createAt,
+    updateAt,
+  }
+]
+
 - POST: /enquete
+
+{
+  title,
+  description,
+  order,
+}
+
 - GET: /enquete/{id}
+
+{
+  id,
+  title,
+  description,
+  order,
+  createAt,
+  updateAt,
+  questions: [
+    {
+      id,
+      body,
+      type,
+      order,
+      createAt,
+      updateAt,
+      choices: [
+        {
+          id,
+          text,
+          order,
+          createAt,
+          updateAt,
+        }
+      ]
+    }
+  ]
+}
+
 - PUT: /enquete/{id}
+
+{
+  title,
+  description,
+  order,
+  enabled,
+}
+
 - DELETE: /enquete/{id}
 
-- GET: /enquete/{id}/question
 - POST: /enquete/{id}/question
-- GET: /enquete/{id}/question/{id}
+
+{
+  body,
+  type,
+  order,
+}
+
 - PUT: /enquete/{id}/question/{id}
+
+{
+  body,
+  type,
+  order,
+}
+
 - DELETE: /enquete/{id}/question/{id}
 
+- POST: /enquete/{id}/question/{id}/choice
+
+{
+  text,
+  order,
+}
+
+- PUT: /enquete/{id}/question/{id}/choice/{id}
+
+{
+  text,
+  order,
+}
+
+- DELETE: /enquete/{id}/question/{id}/choice/{id}
+
 - POST: /enquete/{id}/ask
+
+[
+  {
+    user_id,
+    enquete_id,
+    question_id,
+    choice_id,
+    createAt,
+  }
+]
+
 - POST: /login
+
+{
+  username,
+  password,
+}
+
 - POST: /logout
+
+{
+  token,
+}
 
 ### 参考: REST APIとは？
 
@@ -164,9 +273,16 @@ Redisのデータ設計はRDBと違ってちょっと発想の転換が必要で
 
 #### nodemonの導入
 
+### 参考: modules.exportsとrequire
+
 ### 参考: UUIDとは
 
+> *UUID（Universally Unique Identifier）* とは、ソフトウェア上でオブジェクトを一意に識別するための識別子である。UUIDは128ビットの数値だが、十六進法による`550e8400-e29b-41d4-a716-446655440000` というような文字列による表現が使われることが多い。元来は分散システム上で統制なしに作成できる識別子として設計されており、したがって将来にわたって重複や偶然の一致が起こらない前提で用いることができる。
+
+v1 ~ v5 まであり、v4はランダムな値で生成される。
+
 ### 参考: POSTMANによる動作確認
+
 
 #### 認証機能の実装 (1)
 
