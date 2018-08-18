@@ -22,9 +22,9 @@ class Database {
     const Question = sequelize.import('question', question);
 
     // association
-    Choice.belongsTo(Question);
-    Question.belongsTo(Enquete);
-    Answer.belongsTo(Choice);
+    Enquete.hasMany(Question);
+    Question.hasMany(Choice);
+    Choice.hasMany(Answer);
 
     this._instance = sequelize;
     this._models = {
