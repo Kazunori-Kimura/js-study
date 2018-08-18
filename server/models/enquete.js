@@ -1,29 +1,29 @@
-const uuid = require('uuid/v4');
+// enquete
+const enquete = (sequelize, DataTypes) => {
+  return sequelize.define('enquete', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    enabled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    order: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  });
+};
 
-class Enquete {
-  constructor({
-    id = uuid(),
-    title = '',
-    description = '',
-    enabled = false,
-    createAt = (new Date()).toJSON(),
-    updateAt = (new Date()).toJSON(),
-  }) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.enabled = enabled;
-    this.createAt = createAt;
-    this.updateAt = updateAt;
-  }
-
-  static findAll() {
-
-  }
-
-  static find(id) {
-    
-  }
-}
-
-module.exports = Enquete;
+module.exports = enquete;

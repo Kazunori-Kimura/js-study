@@ -1,5 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const Database = require('./lib/database');
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -17,6 +19,10 @@ app.use((req, res, next) => {
   res.header('no-cache', 'Set-Cookie');
   next();
 });
+
+// database instanceを保持
+const db = new Database({ storage: process.env.SQLITE_PATH });
+app.set('db', db);
 
 // ルーティング設定
 
@@ -48,7 +54,14 @@ process.on('exit', (code) => {
   console.log('app exit: ', code);
 });
 
-// listen
-app.listen(port, () => {
-  console.log(`listening on port ${port}.`);
+// Databaseテーブル生成
+db.sync()
+.then(() => {
+  // listen
+  app.listen(port, () => {
+    console.log(`listening on port ${port}.`);
+  });
+}).catch((err) => {
+  console.error(err);
 });
+

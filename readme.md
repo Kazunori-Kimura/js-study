@@ -74,28 +74,9 @@ npm run xxx
 
 #### Demo
 
-#### システム構成
-
-サーバーレスな感じで作ります
-
-- WebAPI: heroku
-- FrontEnd: GitHub
-
-#### 参考: herokuについて
-
-#### 参考: GitHubについて
-
-### 次回予告
-
 
 
 ## 2. expressによるWebAPI構築
-
-### おさらい: 取り上げるWebアプリのシステム構成
-
-### Redisのインストール
-
-### 参考: Redisについて
 
 ### WebAPIの設計
 
@@ -103,159 +84,238 @@ npm run xxx
 
 ```
 # アンケート
-enquete {list}
-
-enquete:<id> {hash}
+enquetes
+  id {number}
   title {string}
   description {string}
   enabled {boolean}
-  createAt {string} UTC(iso形式)とする
-  updateAt {string} UTC(iso形式)とする
-
-# 設問のリスト
-enquete:<id>/question {list}
+  order {number}
+  create_at {datetime}
+  update_at {datetime}
 
 # 設問
-enquete:<id>/question:<id> {hash}
+questions
+  id {number}
+  enquete_id {number}
   body {string}
   type {string} single/multi
-  createAt {string} UTC(iso形式)とする
-  updateAt {string} UTC(iso形式)とする
+  order {number}
+  create_at {datetime}
+  update_at {datetime}
 
 # 選択肢
-enquete:<id>/question:<id>/choice {list} 選択肢の表示順
-enquete:<id>/question:<id>/choice:<id> {string} 選択肢の文字列
+choices
+  id {number}
+  question_id {number}
+  body {string}
+  order {number}
+  create_at {datetime}
+  update_at {datetime}
 
 # 回答
-enquete:<id>/question:<id>/user:<userid> {set} choiceのidをsetに格納
+answers
+  id {number}
+  choice_id {number}
+  user_id {string}
+  create_at {datetime}
+  update_at {datetime}
+
+# 管理者
+administrators
+  id {number}
+  username {string}
+  password {string}
+  create_at {datetime}
+  update_at {datetime}
 ```
 
-ここまで書いて思ったけど、Redisに向いていない題材だな...
-
-~~Redisのデータ設計はRDBと違ってちょっと発想の転換が必要です。~~
 
 #### URI設計
 
 - GET: /enquete
 
+```json
 [
   {
-    id,
-    title,
-    description,
-    order,
-    createAt,
-    updateAt,
+    "id": 0,
+    "title": "",
+    "description": "",
+    "enabled": true,
+    "order": 0,
+    "createAt": "", // utc
+    "updateAt": "", // utc
   }
 ]
+```
 
 - POST: /enquete
 
+```json
 {
-  title,
-  description,
-  order,
+  "title": "",
+  "description": "",
+  "enabled": true,
+  "order": 0,
 }
+```
 
 - GET: /enquete/{id}
 
+```json
 {
-  id,
-  title,
-  description,
-  order,
-  createAt,
-  updateAt,
-  questions: [
+  "id": 0,
+  "title": "",
+  "description": "",
+  "enabled": true,
+  "order": 0,
+  "createAt": "",
+  "updateAt": "",
+  "questions": [
     {
-      id,
-      body,
-      type,
-      order,
-      createAt,
-      updateAt,
-      choices: [
+      "id": 0,
+      "body": "",
+      "type": "",
+      "order": 0,
+      "createAt": "",
+      "updateAt": "",
+      "choices": [
         {
-          id,
-          text,
-          order,
-          createAt,
-          updateAt,
+          "id": 0,
+          "body": "",
+          "order": 0,
+          "createAt": "",
+          "updateAt": "",
         }
       ]
     }
   ]
 }
+```
 
 - PUT: /enquete/{id}
 
+```json
 {
-  title,
-  description,
-  order,
-  enabled,
+  "title": "",
+  "description": "",
+  "enabled": true,
+  "order": 0,
+  "createAt": "",
+  "updateAt": "",
 }
+```
 
 - DELETE: /enquete/{id}
 
 - POST: /enquete/{id}/question
 
+```json
 {
-  body,
-  type,
-  order,
+  "body": "",
+  "type": "",
+  "order": 0,
 }
+```
 
 - PUT: /enquete/{id}/question/{id}
 
+```json
 {
-  body,
-  type,
-  order,
+  "body": "",
+  "type": "",
+  "order": 0,
+  "createAt": "",
+  "updateAt": "",
 }
+```
 
 - DELETE: /enquete/{id}/question/{id}
 
 - POST: /enquete/{id}/question/{id}/choice
 
+```json
 {
-  text,
-  order,
+  "text": "",
+  "order": 0,
 }
+```
 
 - PUT: /enquete/{id}/question/{id}/choice/{id}
 
+```json
 {
-  text,
-  order,
+  "text": "",
+  "order": 0,
+  "createAt": "",
+  "updateAt": "",
 }
+```
 
 - DELETE: /enquete/{id}/question/{id}/choice/{id}
 
-- POST: /enquete/{id}/ask
+- POST: /answer
 
+```json
 [
   {
-    user_id,
-    enquete_id,
-    question_id,
-    choice_id,
-    createAt,
+    "user_id": "", // uuid
+    "question_id": 0,
+    "choice_id": 0,
   }
 ]
+```
+
+- GET: /administrator
+
+```json
+[
+  {
+    "id": 0,
+    "username": "",
+    "createAt": "",
+    "updateAt": "",
+  }
+]
+```
+
+- POST: /administrator
+
+```json
+{
+  "username": "",
+  "password": "",
+}
+```
+
+- PUT: /administrator/{id}
+
+```json
+{
+  "username": "",
+  "password": "",
+  "createAt": "",
+  "updateAt": "",
+}
+```
+
+- DELETE: /administrator/{id}
 
 - POST: /login
 
+```json
 {
-  username,
-  password,
+  "username": "",
+  "password": "",
 }
+```
 
 - POST: /logout
 
+```json
 {
-  token,
+  "token": "",
 }
+```
 
 ### 参考: REST APIとは？
 
@@ -300,8 +360,6 @@ v1 ~ v5 まであり、v4はランダムな値で生成される。
 ### 参考: CORSについて
 
 ### 環境変数による設定管理
-
-### herokuへのアップロード
 
 ### POSTMANでの動作確認
 

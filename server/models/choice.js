@@ -1,36 +1,20 @@
-const uuid = require('uuid/v4');
+// choice
+const choice = (sequelize, DataTypes) => {
+  return sequelize.define('choice', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    body: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    order: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  });
+};
 
-class Choice {
-  constructor({
-    enqueteId,
-    questionId,
-    id = uuid(),
-    text = '',
-  }) {
-    this.enqueteId = enqueteId;
-    this.questionId = questionId;
-    this.id = id;
-    this.text = text;
-  }
-
-  /**
-   * 選択肢を取得
-   */
-  static async find({ enqueteId, questionId }) {
-
-  }
-
-  create() {
-
-  }
-
-  update() {
-
-  }
-
-  remove() {
-
-  }
-}
-
-module.exports = Choice;
+module.exports = choice;

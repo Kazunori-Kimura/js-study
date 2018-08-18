@@ -1,22 +1,25 @@
-const uuid = require('uuid/v4');
-const QuestionType = require('../lib/QuestionType');
+// question
+const question = (sequelize, DataTypes) => {
+  return sequelize.define('question', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    body: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.ENUM,
+      values: ['single', 'multi'],
+      allowNull: false,
+    },
+    order: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  });
+};
 
-class Question {
-  constructor({
-    id = uuid(),
-    body = '',
-    type = QuestionType.single,
-    choices = [],
-    createAt = (new Date()).toJSON(),
-    updateAt = (new Date()).toJSON(),
-  }) {
-    this.id = id;
-    this.body = body;
-    this.type = type;
-    this.choices = choices;
-    this.createAt = createAt;
-    this.updateAt = updateAt;
-  }
-}
-
-module.exports = Question;
+module.exports = question;
